@@ -1,0 +1,43 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: rgb(58,57,54);
+}
+
+h1, p {
+    text-align: center;
+    text-transform: uppercase;
+    color: white;
+    font-family: Helvetica, sans-serif;
+    font-weight: 200;    
+    margin: 1em;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+p {
+    font-size: 1.5rem;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    width: 80%;
+    aspect-ratio: 1;
+    max-width: 600px;
+}
+
+.tile {
+    background: "#1c1b18";
+    transition: all 0.5s;
+    margin: 0.5em;
+    border-radius: 15%;
+    box-shadow: 5px 5px 5px rgb(0,0,0);
+}

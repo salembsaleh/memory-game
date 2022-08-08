@@ -1,0 +1,1 @@
+jQuery link - https://releases.jquery.com/
