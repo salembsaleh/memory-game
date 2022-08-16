@@ -1,21 +1,33 @@
+// Game variables
 let numtiles = 16;
 let numAttempts = 3;
-let numMatches = 8;
-let TILE_COLOR = "#1c1b18";
+let matchesLeft = 8;
 let tiles = []
+let end = false;
+let clicked = null;
+let clickable = true;
+
+// Constants
+let TILE_COLOR = "#1c1b18";
 let COLORS = ["#f57d7d", "#f57d7d", "#f5b97d", "#f5b97d", "#fcfc77", "#fcfc77", "#7bfc77", "#7bfc77", "#779ffc",
 "#779ffc", "#a177fc", "#a177fc", "#e877fc", "#e877fc", "#fc77d6", "#fc77d6"]
-let END = false;
+let TRANSITION_TIME = 300;
+
+// HTML Elements
+let attemptsText = $("#attempts")
+let container = $(".container")
+let endText = $("#end")
 
 function load_tiles() {
     for(let i = 0; i < numtiles; ++i) {
-        let tileObject = {};
+        let tileObject = {}; // Objects to track jQuery element AND other properties in JS
         tileObject.tile = $("#" + i)
         tileObject.tile.css("background", TILE_COLOR)
         tileObject.matched = false;
         tiles.push(tileObject)
     }
     
+    // CHALLENGE: Make it randomly assigned!
     let tileAssignment = [6,11,3,2,15,7,0,8,5,12,10,1,9,13,14,4]
     for(let i = 0; i < tileAssignment.length; ++i) {
         tiles[tileAssignment[i]].color = COLORS[i]
@@ -23,53 +35,80 @@ function load_tiles() {
 
     for(let i = 0; i < tiles.length; ++i) {
         tiles[i].tile.click(function(){
-            if(!tiles[i].matched) {
-                click_tile(tiles[i])
-                if(!CLICKED) {
-                    CLICKED = tiles[i]
-                } else {
-                    match_tiles(tileObject1, tileObject2)
+            if(!tiles[i].matched && clickable && !end) {
+
+                click_tile(tiles[i], "on") // Turn tile to "on" status
+                
+                // If nothing is currently clicked, track it
+                if(!clicked) {
+                    clicked = tiles[i]
                 }
+                
+                // Otherwise, check if tiles match, check if game is over
+                else {
+                    clickable = false; // Stop from clicking anything during transition time
+        
+                    setTimeout(function(){
+                        match_tiles(tiles[i], clicked);
+                        clickable = true;
+                        checkEnd()
+                    }, TRANSITION_TIME+300); // Wait a moment before matching to show both colors to player
+                }
+
             }
         })
     }
-    return tiles
+
+    return tiles;
 }
 
-function click_tile(tileObject) {
-        tileObject.tile.css("background-color", tileObject.color);
-}
-
-function click_tile_off(tileObject) {
-    tileObject.tile.css("background-color", TILE_COLOR);
+function click_tile(tileObject, type) {
+        // Color depending on "on" or "off" status
+        if(type === "on") {
+            type = tileObject.color;
+        } else {
+            type = TILE_COLOR;
+        }
+        
+        // No clicks during color transition time
+        clickable = false;
+        tileObject.tile.css("background-color", type);
+        setTimeout(function(){
+            clickable = true;
+        }, TRANSITION_TIME);
 }
 
 function match_tiles(tileObject1, tileObject2) {
-    CLICKED = null;
+
+    clicked = null; // Since both tiles clicked, turn off
+
     if(tileObject1.color != tileObject2.color) {
         numAttempts--;
-        click_tile_off(tileObject1);
-        click_tile_off(tileObject2);
+        
+        click_tile(tileObject1, "off");
+        click_tile(tileObject2, "off");
+
+        attemptsText.text(numAttempts)
         return false;        
     }
     
     tileObject1.matched = true;
     tileObject2.matched = true;
-    numMatches--;
+    matchesLeft--;
     return true;
 }
 
-let attemptsText = $("#attempts")
-let container = $(".container")
-let endText = $("#end")
+function checkEnd() {
+    if(matchesLeft === 0) {
+        end = true;
+        endText.text("You won!")
+    }
 
-let tiles = load_tiles()
-tiles = tiles
-console.log(tiles)
-
-while(matchesLeft > 0 || attempts > 0) {
-    
+    else if(numAttempts === 0) {
+        end = true;
+        endText.text("You lost!")
+    }
 }
 
-
-main()
+load_tiles()
+attemptsText.text(numAttempts)
