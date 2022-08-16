@@ -1,6 +1,6 @@
 // Game variables
 let numtiles = 16;
-let numAttempts = 3;
+let numAttempts = 10;
 let matchesLeft = 8;
 let tiles = []
 let end = false;
