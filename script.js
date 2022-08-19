@@ -1,14 +1,14 @@
-let numtiles = 16;
+let numTiles = 16;
 let numAttempts = 3;
 let numMatches = 8;
 let TILE_COLOR = "#1c1b18";
 let tiles = []
 let COLORS = ["#f57d7d", "#f57d7d", "#f5b97d", "#f5b97d", "#fcfc77", "#fcfc77", "#7bfc77", "#7bfc77", "#779ffc",
 "#779ffc", "#a177fc", "#a177fc", "#e877fc", "#e877fc", "#fc77d6", "#fc77d6"]
-let END = false;
+let end = false;
 
 function load_tiles() {
-    for(let i = 0; i < numtiles; ++i) {
+    for(let i = 0; i < numTiles; ++i) {
         let tileObject = {};
         tileObject.tile = $("#" + i)
         tileObject.tile.css("background", TILE_COLOR)
